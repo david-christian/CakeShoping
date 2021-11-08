@@ -13,8 +13,16 @@ const CakeCard = styled(Card)`
   min-height: 100px;
 `;
 
-export default function ProjectCard({ cake }) {
+export default function ProjectCard({ cake, handleAddToCart }) {
   const isShow = cake.isShow;
+
+  // 購物車
+
+  const handleClickCart = () => {
+    console.log(cake)
+    const count = 1
+    handleAddToCart(cake.id, cake.productName, cake.price,count)
+  }
 
   return (
     <>
@@ -71,6 +79,7 @@ export default function ProjectCard({ cake }) {
                 m: 0,
                 borderRadius: 1,
               }}
+              onClick={handleClickCart}
             >
               <ShoppingCartOutlinedIcon />
             </Button>

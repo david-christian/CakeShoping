@@ -120,3 +120,25 @@ export const registerApi = async (username, password, realName, email, phone) =>
     return
   }
 }
+
+export const getOneProductData = async (id) => {
+  try {
+    console.log('getOneProduct id = ',id)
+    const res = await fetch(`${server}/product/${id}`);
+    return await res.json()
+  } catch (error) {
+    console.log('這裡是 getOneProduct 的 error = ', error)
+    return
+  }
+}
+
+export const getOneProductImg = async (id) => {
+  try {
+    console.log('getOneProduct id = ',id)
+    const res = await fetch(`${server}/photo/${id}`);
+    return await res.json()
+  } catch (error) {
+    console.log('這裡是 getOneProduct 的 error = ', error)
+    return
+  }
+}
