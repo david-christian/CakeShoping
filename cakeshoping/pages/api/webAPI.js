@@ -34,10 +34,6 @@ export const interceptor = (store) => {
         store.dispatch(setLoading(false));
         console.log(message);
       }
-      if (!window.navigator.onLine) {
-        alert('網路出了點問題，請重新連線後重整網頁');
-        return;
-      }
       return Promise.reject(error);
     }
   );
@@ -45,11 +41,118 @@ export const interceptor = (store) => {
 
 export const adminLogin = (payload) => instance.post(`/admain`, payload);
 
+export const login = (payload) => instance.post(`/login`, payload);
+
 export const getProducts = () => instance.get(`/product`);
 export const getProduct = (id) => instance.get(`/product/${id}`);
 
+export const deleteProduct = async (id) => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'DELETE',
+      url: `${server}/product/${id}`,
+      headers: {
+        authorization: adminToken,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const updateProduct = async (data) => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'PATCH',
+      url: `${server}/product/`,
+      headers: {
+        authorization: adminToken,
+      },
+      data,
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const addProduct = async (data) => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'POST',
+      url: `${server}/product/`,
+      headers: {
+        authorization: adminToken,
+      },
+      data,
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const productOnAndOffStatus = async (id, status) => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'POST',
+      url: `${server}/product/status`,
+      headers: {
+        authorization: adminToken,
+      },
+      data: {
+        id,
+        status,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 export const getAllPhotos = () => instance.get(`/photo`);
 export const getPhoto = (id) => instance.get(`/photo/${id}`);
+
+export const addNewPhoto = async (data) => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'POST',
+      url: `${server}/photo/`,
+      headers: {
+        authorization: adminToken,
+        withCredentials: false,
+      },
+      mimeType: 'multipart/form-data',
+      data,
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const deletePhoto = async (id) => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'DELETE',
+      url: `${server}/photo/${id}`,
+      headers: {
+        authorization: adminToken,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 export const getProductsAndOnePhoto = async () => {
   try {
@@ -62,6 +165,57 @@ export const getProductsAndOnePhoto = async () => {
     }));
 
     return info;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getOrders = async () => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'GET',
+      url: `${server}/order`,
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: adminToken,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getOrder = async (id) => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'GET',
+      url: `${server}/order/${id}`,
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: adminToken,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+export const getAllOrders = async () => {
+  try {
+    const adminToken = getAdminAuthToken();
+    const res = await axios({
+      method: 'GET',
+      url: `${server}/orderAll`,
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: adminToken,
+      },
+    });
+    return res;
   } catch (error) {
     console.log(error.message);
   }
@@ -99,24 +253,52 @@ export const getUser = async () => {
   }
 };
 
-export const registerApi = async (username, password, realName, email, phone) => {
+export const registerApi = async (
+  username,
+  password,
+  realName,
+  email,
+  phone
+) => {
   try {
     const res = await fetch(`${server}/register`, {
       method: 'POST',
       headers: {
-        'content-type': 'application/json'
+        'content-type': 'application/json',
       },
       body: JSON.stringify({
         username,
         password,
         realName,
         email,
-        phone
-      })
-    })
+        phone,
+      }),
+    });
+    return await res.json();
+  } catch (error) {
+    console.log('這裡是 ProductAPI 的 error = ', error);
+    return;
+  }
+}
+
+export const getOneProductData = async (id) => {
+  try {
+    console.log('getOneProduct id = ',id)
+    const res = await fetch(`${server}/product/${id}`);
     return await res.json()
   } catch (error) {
-    console.log('這裡是 ProductAPI 的 error = ', error)
+    console.log('這裡是 getOneProduct 的 error = ', error)
+    return
+  }
+}
+
+export const getOneProductImg = async (id) => {
+  try {
+    console.log('getOneProduct id = ',id)
+    const res = await fetch(`${server}/photo/${id}`);
+    return await res.json()
+  } catch (error) {
+    console.log('這裡是 getOneProduct 的 error = ', error)
     return
   }
 }
