@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useContext, createContext, useRef, useEffect } from 'react';
 import Meta from '../components/Meta';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -9,26 +9,6 @@ import Box from '@mui/material/Box';
 import { getProductsAndOnePhoto } from '../pages/api/webAPI';
 
 export default function Home({ productAndOnePhoto }) {
-
-  // 購物車，有點像 todolist
-  const [cart, setCart] = useState([])
-  const cartId = useRef(1)
-  const handleAddToCart = (productId, name, price,count) => {
-    // 將點擊到的商品及數量加入購物車中
-    if (!productId) {
-      console.log('cart 哪邊錯了')
-      return
-    }
-    setCart([{
-      id: cartId.current,
-      productId: productId,
-      productName: name,
-      price: price,
-      productCount: count
-    }])
-    cartId.current++  // id++
-  }
-
   return (
     <div>
       <Meta />
@@ -46,7 +26,6 @@ export default function Home({ productAndOnePhoto }) {
         variant="body"
         color="text.secondary"
         sx={{ display: 'block', pt: 2 }}
-        onClick={() => console.log(cart)}
       >
         本月甜點
       </Typography>
@@ -61,7 +40,7 @@ export default function Home({ productAndOnePhoto }) {
         }}
       >
         {productAndOnePhoto.map((cake) => (
-          <ProjectCard key={cake.id} cake={cake} handleAddToCart={handleAddToCart} />
+          <ProjectCard key={cake.id} cake={cake}/>
         ))}
       </Box>
     </div>
