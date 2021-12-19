@@ -155,7 +155,7 @@ export default function Nav() {
           <p>加入會員</p>
         </MenuItem>
       </Link>
-      <Link href={`/member`}>
+      {/* <Link href={`/member`}>
         <MenuItem>
           <IconButton
             size="small"
@@ -170,7 +170,7 @@ export default function Nav() {
           </IconButton>
           <p>會員中心</p>
         </MenuItem>
-      </Link>
+      </Link> */}
     </Menu>
   );
 
