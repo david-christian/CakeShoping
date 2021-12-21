@@ -5,7 +5,6 @@ import theme from '../src/theme';
 import store from '../redux/store';
 import { Provider } from 'react-redux';
 import { interceptor } from '../pages/api/webAPI';
-
 import { AppWrapper } from '../context/CartContext';
 
 function MyApp({ Component, pageProps }) {

@@ -222,7 +222,6 @@ export default function ProductItem({
                       storage: storage.toString(),
                       sell: sell.toString(),
                     };
-
                     handleAddProduct(data);
                   }}
                 >

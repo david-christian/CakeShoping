@@ -18,6 +18,7 @@ export default function AddPhoto({
   handleUploadFile,
   handleAddPhoto,
   handleDeletePhoto,
+
 }) {
   return (
     <>
