@@ -139,65 +139,98 @@ const orderControllers = {
   },
   // 建立訂單
   add: (req, res) => {
-    const userId = req.jwtData.id;
-
-    const { totalPrice, productList, name, phone, address, email } = req.body;
-
-    const handleAddOrder = new Promise((resolve, reject) => {
-      // 比對庫存量是否足夠
-      orderModel.getStorage(productList, (err, result) => {
-        if (err) {
-          return reject({ error: "比對庫存失敗" });
-        }
-        let renewArr = [];
-        for (const i of productList) {
-          const id = i.productId;
-          for (const x of result) {
-            if (x.id == id) {
-              const storage = Number(x.storage) - Number(i.count);
-              const sell = Number(x.sell) + Number(i.count);
-              if (storage >= 0) {
-                renewArr.push({ id, storage, sell });
-              }
-              if (storage < 0) {
-                return reject({ error: `${x.productName}庫存不足` });
+    try {
+      const userId = req.jwtData.id;
+      const { totalPrice, productList, name, phone, address, email } = req.body;
+      const handleAddOrder = new Promise((res, rej) => {
+        orderModel.getProduct(productList, (err, result) => {
+          if (err || result.length != productList.length) {
+            return rej({ error: "取得訂單商品資料失敗" });
+          }
+          let realTotalPrice = 0
+          for (const product of result) {
+            const id = product.id
+            const price = product.price
+            for (const _product of productList) {
+              if (_product.productId == id) {
+                const unitPrice = _product.unitPrice
+                const count = _product.count
+                if (unitPrice != price) {
+                  return rej({ error: "訂單商品單價無法對齊" });
+                }
+                realTotalPrice += Number(count) * Number(unitPrice)
               }
             }
           }
-        }
-        return resolve(renewArr);
+          if (realTotalPrice != totalPrice) {
+            return rej({ error: "訂單商品總價無法對齊" });
+          }
+          return res(result)
+        })
+      })
+      handleAddOrder
+        .then((result) => {
+          // 比對庫存量是否足夠
+          return comparisonStorage(result, productList);
+        })
+        .then((renewArr) => {
+          // 更新庫存量、銷售量
+          return renewProductData(renewArr);
+        })
+        .then(() => {
+          const orderid = uuidv4();
+          // 寫入 order 表
+          return addOrder(orderid, userId, totalPrice);
+        })
+        .then((orderid) => {
+          // 寫入 order_products 表
+          return addProductRecord(orderid, productList);
+        })
+        .then((orderid) => {
+          // 寫入 recipients 表
+          return addRecipient(orderid, name, phone, address, email);
+        })
+        .then((orderid) => {
+          // 訂單新增完成 回傳responce
+          res.status(200);
+          return res.json({ ok: 1, orderId: orderid });
+        })
+        .catch((err) => {
+          res.status(404);
+          return res.json(makeError(ERROR_CODE.INVALID, err.error));
+        });     
+    } catch (error) {
+      console.log("ctl order add catchERROR :", error);
+      res.status(404);
+      return res.json({
+        ok: 0,
+        message: `ctl order add catchERROR：${error}`,
       });
-    });
-    handleAddOrder
-      .then(async (renewArr) => {
-        // 更新庫存量、銷售量
-        return renewPromise(renewArr);
-      })
-      .then(() => {
-        const orderid = uuidv4();
-        // 寫入 order 表
-        return addPromise(orderid, userId, totalPrice);
-      })
-      .then((orderid) => {
-        // 寫入 order_products 表
-        return addopPromise(orderid, productList);
-      })
-      .then((orderid) => {
-        // 寫入 recipients 表
-        return recipientPromise(orderid, name, phone, address, email);
-      })
-      .then((orderid) => {
-        // 訂單新增完成 回傳responce
-        res.status(200);
-        return res.json({ ok: 1, orderId: orderid });
-      })
-      .catch((err) => {
-        res.status(404);
-        return res.json(makeError(ERROR_CODE.INVALID, err.error));
-      });
+    }
   },
 };
-function renewPromise(renewArr) {
+function comparisonStorage(result, productList) {
+  return new Promise((res, rej) => {
+      let renewArr = [];
+      for (const i of productList) {
+        const id = i.productId;
+        for (const x of result) {
+          if (x.id == id) {
+            const storage = Number(x.storage) - Number(i.count);
+            const sell = Number(x.sell) + Number(i.count);
+            if (storage >= 0) {
+              renewArr.push({ id, storage, sell });
+            }
+            if (storage < 0) {
+              return rej({ error: `${x.productName}庫存不足` });
+            }
+          }
+        }
+      }
+      return res(renewArr);
+  });
+}
+function renewProductData(renewArr) {
   return new Promise((res, rej) => {
     orderModel.renew(renewArr, (err) => {
       if (err) {
@@ -208,7 +241,7 @@ function renewPromise(renewArr) {
     });
   });
 }
-function addPromise(orderid, userId, totalPrice) {
+function addOrder(orderid, userId, totalPrice) {
   return new Promise((res, rej) => {
     orderModel.add(orderid, userId, totalPrice, (err) => {
       if (err) {
@@ -219,7 +252,7 @@ function addPromise(orderid, userId, totalPrice) {
     });
   });
 }
-function addopPromise(orderid, productList) {
+function addProductRecord(orderid, productList) {
   return new Promise((res, rej) => {
     orderModel.addop(orderid, productList, (err) => {
       if (err) {
@@ -230,7 +263,7 @@ function addopPromise(orderid, productList) {
     });
   });
 }
-function recipientPromise(orderid, name, phone, address, email) {
+function addRecipient(orderid, name, phone, address, email) {
   return new Promise((res, rej) => {
     orderModel.addRecipient({ orderid, name, phone, address, email }, (err) => {
       if (err) {

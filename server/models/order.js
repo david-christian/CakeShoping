@@ -71,7 +71,7 @@ const orderModel = {
       cb(error);
     }
   },
-  getStorage: (productList, cb) => {
+  getProduct: (productList, cb) => {
     try {
       let sql = "SELECT * FROM products WHERE ";
       let sqlWhere = "";
