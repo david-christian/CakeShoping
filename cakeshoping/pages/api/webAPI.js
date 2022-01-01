@@ -302,3 +302,4 @@ export const getOneProductImg = async (id) => {
     return
   }
 }
+
