@@ -195,7 +195,7 @@ export default function ProductItem({
                       sell: sell.toString(),
                       id: id.toString(),
                     };
-                    handleUpdateProduct(data);
+                    handleUpdateProduct(data, id.toString());
                   }}
                 >
                   送出
@@ -222,6 +222,7 @@ export default function ProductItem({
                       storage: storage.toString(),
                       sell: sell.toString(),
                     };
+
                     handleAddProduct(data);
                   }}
                 >
