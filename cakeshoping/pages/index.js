@@ -39,9 +39,10 @@ export default function Home({ productAndOnePhoto }) {
           marginRight: '-16px',
         }}
       >
-        {productAndOnePhoto.map((cake) => (
+        {console.log('有嗎？', productAndOnePhoto)}
+        {/* {productAndOnePhoto.map((cake) => (
           <ProjectCard key={cake.id} cake={cake}/>
-        ))}
+        ))} */}
       </Box>
     </div>
   );
@@ -49,6 +50,7 @@ export default function Home({ productAndOnePhoto }) {
 
 export const getStaticProps = async () => {
   const productAndOnePhoto = await getProductsAndOnePhoto();
+  console.log(productAndOnePhoto)
   if (productAndOnePhoto) {
     return {
       props: {
