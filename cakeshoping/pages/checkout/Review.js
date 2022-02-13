@@ -47,6 +47,7 @@ export default function Review({orderData}) {
   const handleOpen = () => {
     // 測試用
     console.log('Review orderInfo ====', orderInfo)
+    console.log(localStorage.getItem('token'))
     
   }
   return (
@@ -95,12 +96,65 @@ export default function Review({orderData}) {
       </List>
 
       <Grid container spacing={2}>
+
+        <Grid item container direction="column" xs={12} sm={6}>
+          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+            收貨資訊
+          </Typography>
+          <Grid container>
+            <Grid item xs={6}>
+              <Typography gutterBottom>收貨人：</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>{orderInfo.name}</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>電話：</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>{orderInfo.phone}</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>電子信箱：</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>{orderInfo.email}</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>收貨地址：</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>{orderInfo.address}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+            付款資訊
+          </Typography>
+          <Grid container>
+            <Grid item xs={6}>
+              <Typography gutterBottom>付款方式：</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography gutterBottom>信用卡</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+
+
+      </Grid>
+{/* 
+      <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
             收貨資訊
           </Typography>
           <Typography gutterBottom>收貨人：</Typography>
-          <Typography gutterBottom>地址地址地址地址地址</Typography>
+          <Typography gutterBottom>地址：</Typography>
+          <Typography gutterBottom>電話：</Typography>
+          <Typography gutterBottom>電子郵件：</Typography>
         </Grid>
         <Grid item container direction="column" xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
@@ -119,7 +173,7 @@ export default function Review({orderData}) {
             ))}
           </Grid>
         </Grid>
-      </Grid>
+      </Grid> */}
 
 
     </React.Fragment>

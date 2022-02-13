@@ -13,47 +13,57 @@ import FormLabel from '@mui/material/FormLabel';
 import { useCartContext } from '../../context/CartContext';
 import Button from '@mui/material/Button';
 
-export default function PaymentForm() {
+export default function PaymentForm({orderData}) {
   const { cart, totalPrice } = useCartContext();
-  const [paymentCart, setPaymentCart] = useState([])
-  const [addressName, setAddressName] = useState('')
-  const [address, setAddress] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
+  const { orderInfo, setOrderInfo, formDate, setFormData } = orderData
+
+  const [addressName, setAddressName] = useState(formDate.name)
+  const [address, setAddress] = useState(formDate.address)
+  const [phone, setPhone] = useState(formDate.phone)
+  const [email, setEmail] = useState(formDate.email)
 
   // useEffect(() => {
-  //   console.log('輸入中')
-  //   console.log('paymentCart ===', paymentCart)
-  //   setPaymentInfo({
-  //     "totalPrice": totalPrice,
-  //     "name": addressName, 
-  //     "phone": phone, 
-  //     "address": address, 
-  //     "email": email, 
-  //     "productList": []
-  //   })
-  // }, [addressName, address, phone, email])
+  //   if (!formDate.name || !formDate.phone || !formDate.address || !formData.email) {
+  //     console.log('空的沒事')
+  //     return
+  //   }
+  //   setAddress(formDate.name)
+  //   setPhone(formDate.phone)
+  //   setAddress(formDate.address)
+  //   setEmail(formDate.email)
+  // }, [])
+  // 同步
+  useEffect(() => {
+    setFormData({
+      "name": addressName, 
+      "phone": phone, 
+      "address": address, 
+      "email": email, 
+    })
+  }, [addressName, address, phone, email])
 
   const handleAdd = () => {
-    console.log(paymentCart)
+    console.log('orderInfo ====', orderInfo)
   }
   const handleOpen = () => {
-    console.log(paymentInfo)
+    console.log('w')
   }
 
   return (
     <React.Fragment>
-      <Button onClick={handleAdd} sx={{ mt: 3, ml: 1 }}>paymentCart</Button>
-      <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>paymentInfo</Button>
 
       <Grid container 
         justifyContent="center"
         spacing={3}
-        xs={6} md={12}>
+        >
 
+        <Button onClick={handleAdd} sx={{ mt: 3, ml: 1 }}>現在的 orderInfo</Button>
+        <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>paymentInfo</Button>
+          
           <Grid item xs={6} md={8}>
             <TextField
               required
+              value={ addressName }
               id="cardName"
               label="收件名"
               fullWidth
@@ -65,6 +75,7 @@ export default function PaymentForm() {
           <Grid item xs={6} md={8}>
             <TextField
               required
+              value={ phone }
               id="cardNumber"
               label="電話"
               fullWidth
@@ -76,6 +87,7 @@ export default function PaymentForm() {
           <Grid item xs={6} md={8}>
             <TextField
               required
+              value={ email }
               id="expDate"
               label="電子信箱"
               fullWidth
@@ -87,6 +99,7 @@ export default function PaymentForm() {
           <Grid item xs={6} md={8}>
             <TextField
               required
+              value={ address }
               id="cvv"
               label="地址"
               helperText="前面請輸入郵遞區號"
@@ -101,8 +114,8 @@ export default function PaymentForm() {
             <FormControl component="fieldset">
               <FormLabel component="">選擇付款方式</FormLabel>
               <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-                <FormControlLabel value="female" control={<Radio />} label="信用卡" />
-                <FormControlLabel value="male" control={<Radio />} label="貨到付款" />
+                <FormControlLabel id="payWay" value="cash" control={<Radio />} label="貨到付款" />
+                <FormControlLabel id="payWay" value="card" control={<Radio />} label="信用卡" />
               </RadioGroup>
             </FormControl>
           </Grid>

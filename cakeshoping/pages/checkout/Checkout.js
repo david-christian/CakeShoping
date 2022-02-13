@@ -9,14 +9,21 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
+import CheckLogin from './checkLogin';
 
 import { useCartContext } from '../../context/CartContext';
+import { postOrder, getUser } from '../api/webAPI';
+
+// 身分
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../features/userSlice';
 
 const steps = ['購物車確認', '寄送資料填寫', '訂單確認'];
 
@@ -25,9 +32,11 @@ function getStepContent(step, orderData) {
     case 0:
       return <AddressForm orderData={orderData} />;
     case 1:
-      return <PaymentForm />;
+      return <PaymentForm  orderData={orderData} />;
     case 2:
       return <Review orderData={orderData} />;
+    case 9:
+      return <CheckLogin orderData={orderData} />;
     default:
       throw new Error('Unknown step');
   }
@@ -36,6 +45,10 @@ function getStepContent(step, orderData) {
 const theme = createTheme();
 
 export default function Checkout() {
+  // 身分
+  const user = useSelector(selectUser); // user.role 身分
+  const dispatch = useDispatch();
+
   const [activeStep, setActiveStep] = useState(0);
   const { cart, totalPrice } = useCartContext();
   const [orderInfo, setOrderInfo] = useState({  // 最後要送出的訂單
@@ -46,8 +59,15 @@ export default function Checkout() {
     "email": "", 
     "productList": ['原始陣列']
   });
+  const [formDate, setFormData] = useState({
+    "name": '', 
+    "phone": '', 
+    "address": '', 
+    "email": '', 
+  })
+  const [errorMessage, setErrorMessage] = useState()
   
-  // 將 cart 塞入 productList 中，「cart」 與 order 同步
+  // 塞第一步資料：將 cart 塞入 productList 中，「cart」 與 order 同步
   const setOrderProductList = () =>  {
     const cartToOrder = []
     cart.map(item => {
@@ -61,21 +81,78 @@ export default function Checkout() {
     
     setOrderInfo({
       ...orderInfo,
+      "totalPrice": totalPrice,
       "productList" : cartToOrder
     })
   }
 
-  const orderData = { orderInfo, setOrderInfo, setOrderProductList }
+  // 驗證第二步資料：
+  const validateForm = (formDate) => {
+    console.log('沒有全部填寫')
+    const { name, address, phone, email } = formDate
+    if (name === '' || address === '' || phone === '' || email === '') {
+      setErrorMessage('請輸入每個欄位喲！')
+      return false
+    }
+    setErrorMessage('')
+    return true
+  }
+
+  // 塞第二步資料：
+  const handleOrderPaymentForm = (formDate) => {
+    console.log('log 第二步')
+    const { name, address, phone, email } = formDate
+    setOrderInfo({
+      ...orderInfo,
+      name,
+      phone,
+      address,
+      email
+    })
+  };
+
+  const orderData = { orderInfo, setOrderInfo, setOrderProductList, formDate, setFormData }
+
+  const handleCheckLogin = () => {
+    if (user.role !== 'user') {
+      console.log('尚未登入1')
+      console.log(activeStep)
+      setActiveStep(9);
+      return
+    } 
+    console.log('已登入')
+  }
 
   // 管理下一步，應該要在這驗證第二步有沒有驗證
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
     if (activeStep === 0) {
+      if (user.role !== 'user') {
+        console.log('尚未登入1')
+        setActiveStep(9);
+        return
+      } else {
+        setActiveStep(0);
+      }
+      // handleCheckLogin()
       setOrderProductList()
+      setActiveStep(activeStep + 1);
+    } 
+    if (activeStep === 1) {
+      if (!validateForm(formDate)) return // 簡單的判斷
+      handleOrderPaymentForm(formDate)
+      setActiveStep(activeStep + 1);
     }
+    if (activeStep === 2) {
+      console.log('送出訂單')
+      postOrder(orderInfo)
+      setActiveStep(activeStep + 1);
+    }
+    setErrorMessage('')
+    // setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
+    setErrorMessage('')
     setActiveStep(activeStep - 1);
   };
 
@@ -113,6 +190,7 @@ export default function Checkout() {
             ) : (
               <React.Fragment>
 
+                { errorMessage && <Alert  sx={{ width: '100%' }} severity="error">{errorMessage}</Alert> }
                 {/* 一到三步驟詳細頁面資訊 */}
                 {getStepContent(activeStep, orderData)}
 
@@ -128,7 +206,7 @@ export default function Checkout() {
                     onClick={handleNext}
                     sx={{ mt: 3, ml: 1 }}
                   >
-                    {activeStep === steps.length - 1 ? 'Place order' : '下一步'}
+                    {activeStep === steps.length - 1 ? '送出訂單' : '下一步'}
                   </Button>
                 </Box>
               </React.Fragment>
