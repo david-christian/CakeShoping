@@ -129,7 +129,7 @@ export default function SiglePage() {
                 </ButtonGroup>
 
                 <Grid item>
-                  <Button variant="contained" size="small" fullWidth 
+                  <Button variant="contained" size="small" fullWidth color="info"
                     sx={{ 
                       // mt: 3, mb: 3
                     }}
