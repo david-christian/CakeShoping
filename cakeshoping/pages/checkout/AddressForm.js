@@ -18,14 +18,21 @@ import Box from '@mui/material/Box';
 import { useCartContext } from '../../context/CartContext';
 import CheckoutCartItem from '../../components/CheckoutCartItem';
 
-export default function AddressForm() {
+export default function AddressForm({orderData}) {
   const { cart, setCart, totalPrice } = useCartContext();
+  const { orderInfo, setOrderInfo, setOrderProductList } = orderData
 
+  const handleOpen = () => {
+    // 測試用
+    console.log('AddressForm orderInfo ====', orderInfo)
+  }
   return (
     <React.Fragment>
 
       <TableContainer>
         {/* <Table sx={{ p: { xs: 2, md: 6 } }} aria-label="simple table"> */}
+        <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>orderInfo</Button>
+
         <Table sx={{ width: 800 }} aria-label="simple table">
           <TableHead>
             <TableRow>

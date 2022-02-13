@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect }  from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -15,16 +16,18 @@ import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
 
+import { useCartContext } from '../../context/CartContext';
+
 const steps = ['購物車確認', '寄送資料填寫', '訂單確認'];
 
-function getStepContent(step) {
+function getStepContent(step, orderData) {
   switch (step) {
     case 0:
-      return <AddressForm />;
+      return <AddressForm orderData={orderData} />;
     case 1:
       return <PaymentForm />;
     case 2:
-      return <Review />;
+      return <Review orderData={orderData} />;
     default:
       throw new Error('Unknown step');
   }
@@ -33,16 +36,50 @@ function getStepContent(step) {
 const theme = createTheme();
 
 export default function Checkout() {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const { cart, totalPrice } = useCartContext();
+  const [orderInfo, setOrderInfo] = useState({  // 最後要送出的訂單
+    "totalPrice": 0,
+    "name": "", 
+    "phone": "", 
+    "address": "", 
+    "email": "", 
+    "productList": ['原始陣列']
+  });
+  
+  // 將 cart 塞入 productList 中，「cart」 與 order 同步
+  const setOrderProductList = () =>  {
+    const cartToOrder = []
+    cart.map(item => {
+      let cartItem = {
+        "productId": item.productid,
+        "count": item.count,
+        "unitPrice": item.price
+      }
+      cartToOrder.push(cartItem)
+    })
+    
+    setOrderInfo({
+      ...orderInfo,
+      "productList" : cartToOrder
+    })
+  }
+
+  const orderData = { orderInfo, setOrderInfo, setOrderProductList }
 
   // 管理下一步，應該要在這驗證第二步有沒有驗證
   const handleNext = () => {
     setActiveStep(activeStep + 1);
+    if (activeStep === 0) {
+      setOrderProductList()
+    }
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -77,7 +114,7 @@ export default function Checkout() {
               <React.Fragment>
 
                 {/* 一到三步驟詳細頁面資訊 */}
-                {getStepContent(activeStep)}
+                {getStepContent(activeStep, orderData)}
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   {activeStep !== 0 && (

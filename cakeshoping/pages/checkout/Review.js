@@ -40,15 +40,19 @@ const payments = [
   { name: 'Expiry date', detail: '04/2024' },
 ];
 
-export default function Review() {
-  const { cart, totalPrice, paymentInfo } = useCartContext();
+export default function Review({orderData}) {
+  const { cart, totalPrice } = useCartContext();
+  const { orderInfo, setOrderInfo } = orderData
+
   const handleOpen = () => {
-    console.log(paymentInfo)
+    // 測試用
+    console.log('Review orderInfo ====', orderInfo)
+    
   }
   return (
     <React.Fragment>
 
-      <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>===</Button>
+      <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>orderInfo</Button>
 
       <Typography variant="h6" gutterBottom>
         您的訂單
@@ -90,42 +94,13 @@ export default function Review() {
         </ListItem>
       </List>
 
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            送貨資訊
-          </Typography>
-          <Typography gutterBottom>收貨人</Typography>
-          <Typography gutterBottom>{addresses.join(', ')}</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            Payment details
-          </Typography>
-          <Grid container>
-            {payments.map((payment) => (
-              <React.Fragment key={payment.name}>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
-                </Grid>
-              </React.Fragment>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid>
-
-
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
             收貨資訊
           </Typography>
           <Typography gutterBottom>收貨人：</Typography>
-          <Typography gutterBottom>{addresses.join(', ')}</Typography>
+          <Typography gutterBottom>地址地址地址地址地址</Typography>
         </Grid>
         <Grid item container direction="column" xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>

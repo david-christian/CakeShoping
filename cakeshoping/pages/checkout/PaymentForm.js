@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect }  from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -13,9 +14,28 @@ import { useCartContext } from '../../context/CartContext';
 import Button from '@mui/material/Button';
 
 export default function PaymentForm() {
-  const { cart, paymentInfo, setPaymentInfo } = useCartContext();
+  const { cart, totalPrice } = useCartContext();
+  const [paymentCart, setPaymentCart] = useState([])
+  const [addressName, setAddressName] = useState('')
+  const [address, setAddress] = useState('')
+  const [phone, setPhone] = useState('')
+  const [email, setEmail] = useState('')
+
+  // useEffect(() => {
+  //   console.log('輸入中')
+  //   console.log('paymentCart ===', paymentCart)
+  //   setPaymentInfo({
+  //     "totalPrice": totalPrice,
+  //     "name": addressName, 
+  //     "phone": phone, 
+  //     "address": address, 
+  //     "email": email, 
+  //     "productList": []
+  //   })
+  // }, [addressName, address, phone, email])
+
   const handleAdd = () => {
-    console.log(cart)
+    console.log(paymentCart)
   }
   const handleOpen = () => {
     console.log(paymentInfo)
@@ -23,7 +43,7 @@ export default function PaymentForm() {
 
   return (
     <React.Fragment>
-      <Button onClick={handleAdd} sx={{ mt: 3, ml: 1 }}>cart</Button>
+      <Button onClick={handleAdd} sx={{ mt: 3, ml: 1 }}>paymentCart</Button>
       <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>paymentInfo</Button>
 
       <Grid container 
@@ -39,6 +59,7 @@ export default function PaymentForm() {
               fullWidth
               autoComplete="cc-name"
               variant="standard"
+              onChange={e => setAddressName(e.target.value)}
             />
           </Grid>
           <Grid item xs={6} md={8}>
@@ -49,6 +70,7 @@ export default function PaymentForm() {
               fullWidth
               autoComplete="cc-number"
               variant="standard"
+              onChange={e => setPhone(e.target.value)}
             />
           </Grid>
           <Grid item xs={6} md={8}>
@@ -59,6 +81,7 @@ export default function PaymentForm() {
               fullWidth
               autoComplete="cc-exp"
               variant="standard"
+              onChange={e => setEmail(e.target.value)}
             />
           </Grid>
           <Grid item xs={6} md={8}>
@@ -66,22 +89,15 @@ export default function PaymentForm() {
               required
               id="cvv"
               label="地址"
-              helperText="請輸入郵遞區號"
+              helperText="前面請輸入郵遞區號"
               fullWidth
               autoComplete="cc-csc"
               variant="standard"
+              onChange={e => setAddress(e.target.value)}
             />
           </Grid>
 
-          <Grid item xs={6} md={8}>
-            選擇付款方式
-            <RadioGroup row aria-label="gender" name="row-radio-buttons-group">
-              <FormControlLabel value="female" control={<Radio />} label="信用卡" />
-              <FormControlLabel value="male" control={<Radio />} label="貨到付款" />
-            </RadioGroup>
-          </Grid>
-
-          <Grid item xs={6} md={8} >
+          <Grid item xs={6} md={8} sx={{ my:3 }}>
             <FormControl component="fieldset">
               <FormLabel component="">選擇付款方式</FormLabel>
               <RadioGroup row aria-label="gender" name="row-radio-buttons-group">

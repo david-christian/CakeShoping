@@ -7,57 +7,20 @@ export function AppWrapper({ children }) {
   const [cart, setCart] = useState([])
   const [totalPrice, setTotalPrice] = useState()
   const cartId = useRef(1)
-  const [paymentCart, setPaymentCart] = useState([])
-  const [paymentInfo, setPaymentInfo] = useState(
-    {
-      "totalPrice": 0,
-      "name": "", 
-      "phone": "", 
-      "address": "", 
-      "email": "", 
-      "productList": [
-        {
-          "productId": 35,
-          "count": 2,
-          "unitPrice": 450
-        },
-        {
-          "productId": 45,
-          "count": 1,
-          "unitPrice": 520
-        }
-      ]
-    }
-  )
-  
-  useEffect(() => {
-
-    cart.map(item => {
-      
-    })
-
-    setPaymentCart([{
-      "productId": cart,
-      "count": 2,
-      "unitPrice": 450
-    }])
-
-    const handleButtonClick = () => {
-      if (!value.trim()) return
-      setTodos([{
-        id: id.current,
-        content: value
-      }, ...todos])
-      setValue('')
-      id.current++
-    }
-
-  }, [cart])
-
-  
+  // const [paymentInfo, setPaymentInfo] = useState(
+  //   {
+  //     "totalPrice": 0,
+  //     "name": "", 
+  //     "phone": "", 
+  //     "address": "", 
+  //     "email": "", 
+  //     "productList": []
+  //   }
+  // )
   
   // 每次重整從 local 拿 cart 資料，將 cartId 數量更新到正確
   useEffect(() => {
+    console.log('重整 in context')
     setCart(JSON.parse(getCartFromLocalStorage()) || [])
     
     const local = JSON.parse(getCartFromLocalStorage())
@@ -161,9 +124,7 @@ export function AppWrapper({ children }) {
         handleRemoveFromCart,
         totalPrice, 
         setTotalPrice,
-        paymentInfo,
-        setPaymentInfo,
-        handleChangeCountFromCart
+        handleChangeCountFromCart,
       }}>
       {children}
     </CartContext.Provider>
