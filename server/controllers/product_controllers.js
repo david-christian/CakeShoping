@@ -98,14 +98,14 @@ const productControllers = {
       }
       productModel.add(
         { productName, price, type, articlel, isShow, storage, sell },
-        (err) => {
+        (err, id) => {
           if (err) {
             console.log(`add error2: ${err.toString()}`);
             res.status(403);
             return res.json(makeError(ERROR_CODE.DUPLICATED, "新增商品失敗"));
           }
           res.status(200);
-          return res.json({ ok: 1 });
+          return res.json({ ok: 1 , id});
         }
       );
     } catch (error) {

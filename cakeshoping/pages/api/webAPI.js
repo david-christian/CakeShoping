@@ -320,20 +320,3 @@ export const postOrder = async (data) => {
     console.log(error.message);
   }
 };
-
-
-// export const getUser = async () => {
-//   try {
-//     const token = getAuthToken();
-//     const res = await axios({
-//       method: 'GET',
-//       url: `${server}/me`,
-//       headers: {
-//         authorization: token,
-//       },
-//     });
-//     return res;
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// };

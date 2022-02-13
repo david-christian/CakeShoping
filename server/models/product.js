@@ -41,9 +41,9 @@ const productModel = {
       db.query(
         "INSERT INTO products(productName, price, type, articlel, isShow, storage, sell) values(?, ?, ?, ?, ?, ?, ?)",
         [productName, price, type, articlel, isShow, storage, sell],
-        (err) => {
+        (err, result) => {
           if (err) return cb(err);
-          return cb(null);
+          return cb(null, result.insertId);
         }
       );
     } catch (error) {
