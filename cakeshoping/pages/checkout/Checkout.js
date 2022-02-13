@@ -181,7 +181,7 @@ export default function Checkout() {
                 </Typography>
                 <Link href={`/`}>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }} >
+                    <Button variant="contained" sx={{ mt: 3, ml: 1 }} >
                       回到首頁
                     </Button>
                   </Box>

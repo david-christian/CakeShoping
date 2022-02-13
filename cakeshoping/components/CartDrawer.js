@@ -70,7 +70,7 @@ export default function CartDrawer() {
         ))}
       </List>
       {/* 可以放總金額組件 */}
-      <Link href={`/cart`}>
+      <Link href={`/checkout`}>
         <Button
           variant="outlined"
           sx={{
