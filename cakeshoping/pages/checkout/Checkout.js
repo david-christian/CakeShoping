@@ -3,14 +3,12 @@ import { useState, useEffect }  from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AddressForm from './AddressForm';
@@ -24,6 +22,9 @@ import { postOrder, getUser } from '../api/webAPI';
 // 身分
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../../features/userSlice';
+
+// 都成功，返回首頁
+import Link from 'next/link';
 
 const steps = ['購物車確認', '寄送資料填寫', '訂單確認'];
 
@@ -133,30 +134,24 @@ export default function Checkout() {
       } else {
         setActiveStep(0);
       }
-      // handleCheckLogin()
       setOrderProductList()
-      setActiveStep(activeStep + 1);
     } 
     if (activeStep === 1) {
       if (!validateForm(formDate)) return // 簡單的判斷
       handleOrderPaymentForm(formDate)
-      setActiveStep(activeStep + 1);
     }
     if (activeStep === 2) {
       console.log('送出訂單')
       postOrder(orderInfo)
-      setActiveStep(activeStep + 1);
     }
     setErrorMessage('')
-    // setActiveStep(activeStep + 1);
+    setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
     setErrorMessage('')
     setActiveStep(activeStep - 1);
   };
-
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -179,13 +174,18 @@ export default function Checkout() {
             {activeStep === steps.length ? (
               <React.Fragment>
                 <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
+                  感謝您的購買！
                 </Typography>
                 <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order
-                  confirmation, and will send you an update when your order has
-                  shipped.
+                  您的訂單已成功送出，請隨時注意您的收貨訊息，蛋糕很香祝您有愉快的一餐！
                 </Typography>
+                <Link href={`/`}>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button variant="contained" onClick={handleNext} sx={{ mt: 3, ml: 1 }} >
+                      回到首頁
+                    </Button>
+                  </Box>
+                </Link>
               </React.Fragment>
             ) : (
               <React.Fragment>
@@ -212,7 +212,6 @@ export default function Checkout() {
               </React.Fragment>
             )}
           </React.Fragment>
-
         </Paper>
       </Container>
     </ThemeProvider>

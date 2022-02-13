@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect }  from 'react';
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -11,28 +10,15 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { useCartContext } from '../../context/CartContext';
-import Button from '@mui/material/Button';
 
 export default function PaymentForm({orderData}) {
-  const { cart, totalPrice } = useCartContext();
-  const { orderInfo, setOrderInfo, formDate, setFormData } = orderData
-
+  const { formDate, setFormData } = orderData
   const [addressName, setAddressName] = useState(formDate.name)
   const [address, setAddress] = useState(formDate.address)
   const [phone, setPhone] = useState(formDate.phone)
   const [email, setEmail] = useState(formDate.email)
 
-  // useEffect(() => {
-  //   if (!formDate.name || !formDate.phone || !formDate.address || !formData.email) {
-  //     console.log('空的沒事')
-  //     return
-  //   }
-  //   setAddress(formDate.name)
-  //   setPhone(formDate.phone)
-  //   setAddress(formDate.address)
-  //   setEmail(formDate.email)
-  // }, [])
-  // 同步
+  // 除了商品外的其他訊息
   useEffect(() => {
     setFormData({
       "name": addressName, 
@@ -42,24 +28,13 @@ export default function PaymentForm({orderData}) {
     })
   }, [addressName, address, phone, email])
 
-  const handleAdd = () => {
-    console.log('orderInfo ====', orderInfo)
-  }
-  const handleOpen = () => {
-    console.log('w')
-  }
-
   return (
     <React.Fragment>
-
       <Grid container 
         justifyContent="center"
         spacing={3}
+        sx={{mt: 2,  width: 800 }}
         >
-
-        <Button onClick={handleAdd} sx={{ mt: 3, ml: 1 }}>現在的 orderInfo</Button>
-        <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>paymentInfo</Button>
-          
           <Grid item xs={6} md={8}>
             <TextField
               required
@@ -119,9 +94,7 @@ export default function PaymentForm({orderData}) {
               </RadioGroup>
             </FormControl>
           </Grid>
-
       </Grid>
-
     </React.Fragment>
   );
 }

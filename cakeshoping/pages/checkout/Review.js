@@ -8,65 +8,16 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import { useCartContext } from '../../context/CartContext';
 
-const products = [
-  {
-    name: 'Product 1',
-    desc: 'A nice thing',
-    price: '$9.99',
-  },
-  {
-    name: 'Product 2',
-    desc: 'Another thing',
-    price: '$3.45',
-  },
-  {
-    name: 'Product 3',
-    desc: 'Something else',
-    price: '$6.51',
-  },
-  {
-    name: 'Product 4',
-    desc: 'Best thing of all',
-    price: '$14.11',
-  },
-  { name: 'Shipping', desc: '', price: 'Free' },
-];
-
-const addresses = ['1 MUI Drive', 'Reactville', 'Anytown', '99999', 'USA'];
-const payments = [
-  { name: 'Card type', detail: 'Visa' },
-  { name: 'Card holder', detail: 'Mr John Smith' },
-  { name: 'Card number', detail: 'xxxx-xxxx-xxxx-1234' },
-  { name: 'Expiry date', detail: '04/2024' },
-];
-
 export default function Review({orderData}) {
   const { cart, totalPrice } = useCartContext();
-  const { orderInfo, setOrderInfo } = orderData
+  const { orderInfo } = orderData
 
-  const handleOpen = () => {
-    // 測試用
-    console.log('Review orderInfo ====', orderInfo)
-    console.log(localStorage.getItem('token'))
-    
-  }
   return (
     <React.Fragment>
-
-      <Button onClick={handleOpen} sx={{ mt: 3, ml: 1 }}>orderInfo</Button>
-
       <Typography variant="h6" gutterBottom>
         您的訂單
       </Typography>
       <List disablePadding>
-
-        {/* {products.map((product) => (
-          <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.name} secondary={product.desc} />
-            <Typography variant="body2">{product.price}</Typography>
-          </ListItem>
-        ))} */}
-
           <ListItem sx={{ py: 1, px: 0, fontSize: '10px', }}>
             <ListItemText sx={{ width: '12%', }}>商品名稱</ListItemText>
             <ListItemText>單價</ListItemText>
@@ -79,7 +30,6 @@ export default function Review({orderData}) {
           <ListItem key={cartItem.id} sx={{ py: 3, px: 1 }}>
             <ListItemText primary={cartItem.productName} sx={{ width: '8%', }} />
             <ListItemText >$ {cartItem.price}</ListItemText>
-            {/* <ListItemText primary={cartItem.count} /> */}
             <Typography variant="body2" >{cartItem.count} 份 </Typography>
           </ListItem>
             <Divider  />
@@ -95,7 +45,7 @@ export default function Review({orderData}) {
         </ListItem>
       </List>
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ width: 800 }}>
 
         <Grid item container direction="column" xs={12} sm={6}>
           <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
@@ -142,40 +92,7 @@ export default function Review({orderData}) {
             </Grid>
           </Grid>
         </Grid>
-
-
       </Grid>
-{/* 
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            收貨資訊
-          </Typography>
-          <Typography gutterBottom>收貨人：</Typography>
-          <Typography gutterBottom>地址：</Typography>
-          <Typography gutterBottom>電話：</Typography>
-          <Typography gutterBottom>電子郵件：</Typography>
-        </Grid>
-        <Grid item container direction="column" xs={12} sm={6}>
-          <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
-            付款資訊
-          </Typography>
-          <Grid container>
-            {payments.map((payment) => (
-              <React.Fragment key={payment.name}>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.name}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography gutterBottom>{payment.detail}</Typography>
-                </Grid>
-              </React.Fragment>
-            ))}
-          </Grid>
-        </Grid>
-      </Grid> */}
-
-
     </React.Fragment>
   );
 }
