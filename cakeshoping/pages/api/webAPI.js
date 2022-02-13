@@ -304,3 +304,20 @@ export const getOneProductImg = async (id) => {
   }
 }
 
+export const postOrder = async (data) => {
+  console.log('webAPI 送出訂單')
+  try {
+    const token = getAuthToken();
+    const res = await axios({
+      method: 'POST',
+      url: `${server}/order/`,
+      headers: {
+        authorization: token,
+      },
+      data
+    });
+    return res;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
