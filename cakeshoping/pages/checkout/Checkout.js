@@ -36,8 +36,8 @@ function getStepContent(step, orderData) {
       return <PaymentForm  orderData={orderData} />;
     case 2:
       return <Review orderData={orderData} />;
-    case 9:
-      return <CheckLogin orderData={orderData} />;
+    // case 9:
+    //   return <CheckLogin orderData={orderData} />;
     default:
       throw new Error('Unknown step');
   }
@@ -127,13 +127,13 @@ export default function Checkout() {
   // 管理下一步，應該要在這驗證第二步有沒有驗證
   const handleNext = () => {
     if (activeStep === 0) {
-      if (user.role !== 'user') {
-        console.log('尚未登入1')
-        setActiveStep(9);
-        return
-      } else {
-        setActiveStep(0);
-      }
+      // if (user.role !== 'user') {
+      //   console.log('尚未登入1')
+      //   setActiveStep(9);
+      //   return
+      // } else {
+      //   setActiveStep(0);
+      // }
       setOrderProductList()
     } 
     if (activeStep === 1) {
@@ -142,6 +142,7 @@ export default function Checkout() {
     }
     if (activeStep === 2) {
       console.log('送出訂單')
+      console.log('送出訂單 orderInfo = ', orderInfo)
       postOrder(orderInfo)
     }
     setErrorMessage('')
