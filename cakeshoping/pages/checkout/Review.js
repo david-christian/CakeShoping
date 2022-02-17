@@ -8,8 +8,8 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import { useCartContext } from '../../context/CartContext';
 
-export default function Review({ orderInfo }) {
-  const { cart, totalPrice } = useCartContext();
+export default function Review() {
+  const { cart, totalPrice, orderInfo } = useCartContext();
   // const { orderInfo } = orderData;
 
   const OrderListItem = ({ cartItem }) => {

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useRef, useMemo, useEffect  } from 'react';
-import { addCartToLocalStorage, getCartFromLocalStorage } from '../utils/utils'
+import { addCartToLocalStorage, getCartFromLocalStorage, addCheckoutDataToLocalStorage, getCheckoutDataFromLocalStorage } from '../utils/utils'
 
 const CartContext = createContext(null);
 
@@ -7,17 +7,110 @@ export function AppWrapper({ children }) {
   const [cart, setCart] = useState([])
   const [totalPrice, setTotalPrice] = useState()
   const cartId = useRef(1)
-  // const [paymentInfo, setPaymentInfo] = useState(
-  //   {
-  //     "totalPrice": 0,
-  //     "name": "", 
-  //     "phone": "", 
-  //     "address": "", 
-  //     "email": "", 
-  //     "productList": []
-  //   }
-  // )
-  
+
+  // const handleOrderPaymentForm = (formData) => {
+  // 多送的參數 => orderInfo, setOrderInfo, handleAddOrderProductList, handleOrderPaymentForm
+  /////////////////  最後送出訂單               cart 塞入訂單()      塞表單資料()
+  // formData  setFormData
+  // ## // 最後要送出的訂單 
+  const [orderInfo, setOrderInfo] = useState({ 
+    "totalPrice": 0,
+    "name": "", 
+    "phone": "", 
+    "address": "", 
+    "email": "", 
+    "productList": ['原始陣列']
+  });
+
+  const [formData, setFormData] = useState({
+    "name": '', 
+    "phone": '', 
+    "address": '', 
+    "email": '', 
+  })
+
+  // # context 塞第一步資料：將 cart 塞入 productList 中，「cart」 與 order 同步
+  // 第一步執行
+  const handleAddOrderProductList = () =>  {
+    const cartToOrder = []
+    cart.map(item => {
+      let cartItem = {
+        "productId": item.productid,
+        "count": item.count,
+        "unitPrice": item.price
+      }
+      cartToOrder.push(cartItem)
+    })
+    setOrderInfo({
+      ...orderInfo,
+      "totalPrice": totalPrice,
+      "productList" : cartToOrder
+    })
+    addCheckoutDataToLocalStorage({
+      ...orderInfo,
+      "totalPrice": totalPrice,
+      "productList" : cartToOrder
+    })
+  }
+
+  // 移除訂單資料 cart 也歸零
+  const handleRemoveCheckout = () => {
+    setOrderInfo({ 
+      "totalPrice": 0,
+      "name": "", 
+      "phone": "", 
+      "address": "", 
+      "email": "", 
+      "productList": []
+    })
+    addCheckoutDataToLocalStorage({ 
+      "totalPrice": 0,
+      "name": "", 
+      "phone": "", 
+      "address": "", 
+      "email": "", 
+      "productList": []
+    })
+    setCart([])
+    addCartToLocalStorage([])
+  }
+
+
+  // # context 塞第二步資料：
+  const handleOrderPaymentForm = () => {
+    console.log('context 塞第二步資料：')
+    console.log('formData = ', formData)
+    const { name, address, phone, email } = formData
+    setOrderInfo({
+      ...orderInfo,
+      name,
+      phone,
+      address,
+      email
+    })
+    addCheckoutDataToLocalStorage({
+      ...orderInfo,
+      name,
+      phone,
+      address,
+      email
+    })
+  };
+
+  // 每次重整從 local 拿出 checkout 資料
+  useEffect(() => {
+    console.log('拿 checkout 資料')
+    console.log()
+    setOrderInfo(JSON.parse(getCheckoutDataFromLocalStorage()) || { 
+      "totalPrice": 0,
+      "name": "", 
+      "phone": "", 
+      "address": "", 
+      "email": "", 
+      "productList": ['原始ㄉ陣列']
+    })
+  }, [])
+
   // 每次重整從 local 拿 cart 資料，將 cartId 數量更新到正確
   useEffect(() => {
     console.log('重整 in context')
@@ -41,10 +134,8 @@ export function AppWrapper({ children }) {
     setTotalPrice(total)
   }, [cart])
 
-  // const contextValue = useMemo(() => {
-  //   return [cart, setCart];
-  // }, [cart, setCart]);
   
+
   // 商品加到購物車
   const handleAddToCart = (productInfo, count) => {
     const { productid, productName, price, url }  = productInfo
@@ -125,6 +216,7 @@ export function AppWrapper({ children }) {
         totalPrice, 
         setTotalPrice,
         handleChangeCountFromCart,
+        orderInfo, setOrderInfo, handleAddOrderProductList, handleOrderPaymentForm,  formData, setFormData, handleRemoveCheckout
       }}>
       {children}
     </CartContext.Provider>
