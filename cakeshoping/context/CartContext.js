@@ -22,7 +22,7 @@ export function AppWrapper({ children }) {
   useEffect(() => {
     console.log('重整 in context')
     setCart(JSON.parse(getCartFromLocalStorage()) || [])
-    
+    console.log(cart)
     const local = JSON.parse(getCartFromLocalStorage())
     if (!local) {
       cartId.current = 1

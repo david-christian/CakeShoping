@@ -155,7 +155,7 @@ export const deletePhoto = async (id) => {
 };
 
 export const getProductsAndOnePhoto = async () => {
-  console.log('進來 getProductsAndOnePhoto')
+  // console.log('進來 getProductsAndOnePhoto')
   try {
     const { data: products } = await getProducts();
     const { data: photos } = await getAllPhotos();
@@ -164,7 +164,7 @@ export const getProductsAndOnePhoto = async () => {
       ...photos.result.find((photo) => product.id === photo.productid),
       ...product,
     }));
-    console.log('info = ', info)
+    // console.log('info = ', info)
     return info;
   } catch (error) {
     console.log(error.message);

@@ -43,6 +43,31 @@ function getStepContent(step, orderData) {
   }
 }
 
+function StepContent({step, orderInfo, setOrderInfo, setOrderProductList, formDate, setFormData}) {
+  switch (step) {
+    case 0:
+      return <AddressForm />;
+    case 1:
+      return <PaymentForm 
+        orderInfo={orderInfo}
+        setOrderInfo={setOrderInfo}
+        setOrderProductList={setOrderProductList}
+        formDate={formDate}
+        setFormData={setFormData}
+      />;
+    case 2:
+      return <Review 
+        orderInfo={orderInfo}
+        setOrderInfo={setOrderInfo}
+        setOrderProductList={setOrderProductList}
+        formDate={formDate}
+        setFormData={setFormData}
+      />;
+    default:
+      throw new Error('Unknown step');
+  }
+}
+
 const theme = createTheme();
 
 export default function Checkout() {
@@ -112,7 +137,7 @@ export default function Checkout() {
     })
   };
 
-  const orderData = { orderInfo, setOrderInfo, setOrderProductList, formDate, setFormData }
+  // const orderData = { orderInfo, setOrderInfo, setOrderProductList, formDate, setFormData }
 
   const handleCheckLogin = () => {
     if (user.role !== 'user') {
@@ -193,7 +218,16 @@ export default function Checkout() {
 
                 { errorMessage && <Alert  sx={{ width: '100%' }} severity="error">{errorMessage}</Alert> }
                 {/* 一到三步驟詳細頁面資訊 */}
-                {getStepContent(activeStep, orderData)}
+                {/* {getStepContent(activeStep, orderData)} */}
+                <StepContent 
+                  step={activeStep} 
+                  // orderData={orderData}
+                  orderInfo={orderInfo}
+                  setOrderInfo={setOrderInfo}
+                  setOrderProductList={setOrderProductList}
+                  formDate={formDate}
+                  setFormData={setFormData}
+                />
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                   {activeStep !== 0 && (

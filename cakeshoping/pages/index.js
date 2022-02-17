@@ -39,10 +39,10 @@ export default function Home({ productAndOnePhoto }) {
           marginRight: '-16px',
         }}
       >
-        {console.log('有嗎？', productAndOnePhoto)}
-        {/* {productAndOnePhoto.map((cake) => (
+        {/* {console.log('有嗎？', productAndOnePhoto)} */}
+        {productAndOnePhoto.map((cake) => (
           <ProjectCard key={cake.id} cake={cake}/>
-        ))} */}
+        ))}
       </Box>
     </div>
   );

@@ -11,12 +11,19 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { useCartContext } from '../../context/CartContext';
 
-export default function PaymentForm({orderData}) {
-  const { formDate, setFormData } = orderData
-  const [addressName, setAddressName] = useState(formDate.name)
-  const [address, setAddress] = useState(formDate.address)
-  const [phone, setPhone] = useState(formDate.phone)
-  const [email, setEmail] = useState(formDate.email)
+export default function PaymentForm({ formDate, setFormData }) {
+  // const { formDate, setFormData } = orderData
+  const [addressName, setAddressName] = useState(formDate.name || '')
+  const [address, setAddress] = useState(formDate.address || '')
+  const [phone, setPhone] = useState(formDate.phone || '')
+  const [email, setEmail] = useState(formDate.email || '')
+
+  // useEffect(() => {
+  //   setAddressName(formDate.name)
+  //   setAddress(formDate.address)
+  //   setPhone(formDate.phone)
+  //   setEmail(formDate.email)
+  // }, [formDate])
 
   // 除了商品外的其他訊息
   useEffect(() => {

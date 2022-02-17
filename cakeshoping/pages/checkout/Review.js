@@ -8,9 +8,22 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import { useCartContext } from '../../context/CartContext';
 
-export default function Review({orderData}) {
+export default function Review({ orderInfo }) {
   const { cart, totalPrice } = useCartContext();
-  const { orderInfo } = orderData
+  // const { orderInfo } = orderData;
+
+  const OrderListItem = ({ cartItem }) => {
+    return (
+      <>
+        <ListItem sx={{ py: 3, px: 1 }}>
+          <ListItemText primary={cartItem.productName} sx={{ width: '8%', }} />
+          <ListItemText >$ {cartItem.price}</ListItemText>
+          <Typography variant="body2" >{cartItem.count} 份 </Typography>
+        </ListItem>
+          <Divider  />
+      </>
+    )
+  }
 
   return (
     <React.Fragment>
@@ -26,14 +39,15 @@ export default function Review({orderData}) {
 
         {/* 顯示訂單商品 */}
         {cart.map((cartItem) => (
-          <>
-          <ListItem key={cartItem.id} sx={{ py: 3, px: 1 }}>
-            <ListItemText primary={cartItem.productName} sx={{ width: '8%', }} />
-            <ListItemText >$ {cartItem.price}</ListItemText>
-            <Typography variant="body2" >{cartItem.count} 份 </Typography>
-          </ListItem>
-            <Divider  />
-          </>
+          <OrderListItem key={cartItem.id} cartItem={cartItem} />
+          // <>
+          // <ListItem key={cartItem.id} sx={{ py: 3, px: 1 }}>
+          //   <ListItemText primary={cartItem.productName} sx={{ width: '8%', }} />
+          //   <ListItemText >$ {cartItem.price}</ListItemText>
+          //   <Typography variant="body2" >{cartItem.count} 份 </Typography>
+          // </ListItem>
+          //   <Divider  />
+          // </>
         ))}
 
         {/* 顯示訂單總價 */}
