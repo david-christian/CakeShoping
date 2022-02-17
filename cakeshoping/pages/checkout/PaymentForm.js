@@ -13,37 +13,10 @@ import { useCartContext } from '../../context/CartContext';
 
 export default function PaymentForm() {
   const { setFormData, orderInfo, setOrderInfo, handleOrderPaymentForm } = useCartContext();
-  // const { formData, setFormData } = orderData
   const [addressName, setAddressName] = useState('')
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
-
-  // ##
-  // const [formData, setFormData] = useState({
-  //   "name": '', 
-  //   "phone": '', 
-  //   "address": '', 
-  //   "email": '', 
-  // })
-  // useEffect(() => {
-  //   setAddressName(formData.name)
-  //   setAddress(formData.address)
-  //   setPhone(formData.phone)
-  //   setEmail(formData.email)
-  // }, [formData])
-
-  // ## 驗證先拿掉
-  // const validateForm = (formData) => {
-  //   console.log('沒有全部填寫')
-  //   const { name, address, phone, email } = formData
-  //   if (name === '' || address === '' || phone === '' || email === '') {
-  //     setErrorMessage('請輸入每個欄位喲！')
-  //     return false
-  //   }
-  //   setErrorMessage('')
-  //   return true
-  // }
 
   // 除了商品外的其他訊息
   useEffect(() => {
@@ -56,8 +29,6 @@ export default function PaymentForm() {
   }, [addressName, address, phone, email])
 
   function handleInput(e) {
-    console.log(e.target.value)
-    console.log('123')
     handleOrderPaymentForm()
   }
 

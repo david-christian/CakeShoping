@@ -10,7 +10,6 @@ import { useCartContext } from '../../context/CartContext';
 
 export default function Review() {
   const { cart, totalPrice, orderInfo } = useCartContext();
-  // const { orderInfo } = orderData;
 
   const OrderListItem = ({ cartItem }) => {
     return (
@@ -40,14 +39,6 @@ export default function Review() {
         {/* 顯示訂單商品 */}
         {cart.map((cartItem) => (
           <OrderListItem key={cartItem.id} cartItem={cartItem} />
-          // <>
-          // <ListItem key={cartItem.id} sx={{ py: 3, px: 1 }}>
-          //   <ListItemText primary={cartItem.productName} sx={{ width: '8%', }} />
-          //   <ListItemText >$ {cartItem.price}</ListItemText>
-          //   <Typography variant="body2" >{cartItem.count} 份 </Typography>
-          // </ListItem>
-          //   <Divider  />
-          // </>
         ))}
 
         {/* 顯示訂單總價 */}

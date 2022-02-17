@@ -305,8 +305,6 @@ export const getOneProductImg = async (id) => {
 }
 
 export const postOrder = async (data) => {
-  console.log('webAPI 送出訂單')
-  console.log('webAPI 送出訂單 DATA = ', data)
   try {
     const token = getAuthToken();
     const res = await axios({

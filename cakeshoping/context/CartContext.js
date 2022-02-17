@@ -8,11 +8,6 @@ export function AppWrapper({ children }) {
   const [totalPrice, setTotalPrice] = useState()
   const cartId = useRef(1)
 
-  // const handleOrderPaymentForm = (formData) => {
-  // 多送的參數 => orderInfo, setOrderInfo, handleAddOrderProductList, handleOrderPaymentForm
-  /////////////////  最後送出訂單               cart 塞入訂單()      塞表單資料()
-  // formData  setFormData
-  // ## // 最後要送出的訂單 
   const [orderInfo, setOrderInfo] = useState({ 
     "totalPrice": 0,
     "name": "", 
@@ -75,7 +70,6 @@ export function AppWrapper({ children }) {
     addCartToLocalStorage([])
   }
 
-
   // # context 塞第二步資料：
   const handleOrderPaymentForm = () => {
     console.log('context 塞第二步資料：')
@@ -117,7 +111,7 @@ export function AppWrapper({ children }) {
     setCart(JSON.parse(getCartFromLocalStorage()) || [])
     console.log(cart)
     const local = JSON.parse(getCartFromLocalStorage())
-    if (!local) {
+    if (!local || local.length === 0) {
       cartId.current = 1
     } else {
       let localLength = local.length
@@ -133,8 +127,6 @@ export function AppWrapper({ children }) {
     })
     setTotalPrice(total)
   }, [cart])
-
-  
 
   // 商品加到購物車
   const handleAddToCart = (productInfo, count) => {
